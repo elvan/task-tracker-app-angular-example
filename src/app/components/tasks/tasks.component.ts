@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { TaskService } from 'src/app/services/task.service';
+import { WidgetService } from 'src/app/services/widget.service';
 import { Task } from '../../task';
 
 @Component({
@@ -16,11 +17,21 @@ export class TasksComponent implements OnDestroy, OnInit {
   toggleReminderSub?: Subscription;
   deleteTaskSub?: Subscription;
 
-  constructor(private taskService: TaskService) {}
+  showAddTask?: boolean;
+  widgetSub?: Subscription;
+
+  constructor(
+    private taskService: TaskService,
+    private widget: WidgetService
+  ) {}
 
   ngOnInit(): void {
     this.listTasksSub = this.taskService.getTasks().subscribe((tasks) => {
       this.tasks = tasks;
+    });
+
+    this.widgetSub = this.widget.onToggle().subscribe((showAddTask) => {
+      this.showAddTask = showAddTask;
     });
   }
 
@@ -29,6 +40,7 @@ export class TasksComponent implements OnDestroy, OnInit {
     this.addTaskSub?.unsubscribe();
     this.toggleReminderSub?.unsubscribe();
     this.deleteTaskSub?.unsubscribe();
+    this.widgetSub?.unsubscribe();
   }
 
   addTask(task: any) {

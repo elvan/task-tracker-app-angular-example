@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { WidgetService } from 'src/app/services/widget.service';
 import { Task } from 'src/app/task';
 
 @Component({
@@ -13,7 +14,7 @@ export class AddTaskComponent implements OnInit {
 
   @Output() addTask = new EventEmitter<Task>();
 
-  constructor() {}
+  constructor(private widget: WidgetService) {}
 
   ngOnInit(): void {}
 
@@ -40,5 +41,7 @@ export class AddTaskComponent implements OnInit {
     this.text = '';
     this.day = '';
     this.reminder = false;
+
+    this.widget.toggleAddTask();
   }
 }

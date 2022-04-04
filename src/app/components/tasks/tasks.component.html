@@ -1,4 +1,4 @@
-<app-add-task (addTask)="addTask($event)"></app-add-task>
+<app-add-task *ngIf="showAddTask" (addTask)="addTask($event)"></app-add-task>
 
 <ng-container *ngIf="tasks.length > 0; else empty">
   <app-task-item
