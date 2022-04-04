@@ -1,6 +1,10 @@
 <app-add-task *ngIf="showAddTask" (addTask)="addTask($event)"></app-add-task>
 
 <ng-container *ngIf="tasks.length > 0; else empty">
+  <p>
+    <small>Double-click to toggle the task remainder</small>
+  </p>
+
   <app-task-item
     *ngFor="let task of tasks"
     [task]="task"

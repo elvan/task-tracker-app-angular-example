@@ -1,12 +1,9 @@
 <header>
   <h1>{{ title }}</h1>
   <app-button
+    *ngIf="hasRoute('/')"
     text="{{ showAddTask ? 'Cancel' : 'Add Task' }}"
     color="{{ showAddTask ? 'red' : 'green' }}"
     (btnClick)="toggleAddTask()"
   ></app-button>
 </header>
-
-<p>
-  <small>Double-click to toggle the task remainder</small>
-</p>
