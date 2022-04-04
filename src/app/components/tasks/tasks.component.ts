@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { TASKS } from 'src/app/mock-tasks';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { TaskService } from 'src/app/services/task.service';
 import { Task } from '../../task';
 
 @Component({
@@ -7,10 +8,19 @@ import { Task } from '../../task';
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.css'],
 })
-export class TasksComponent implements OnInit {
-  tasks: Task[] = TASKS;
+export class TasksComponent implements OnDestroy, OnInit {
+  tasks: Task[] = [];
+  subscription?: Subscription;
 
-  constructor() {}
+  constructor(private taskService: TaskService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.subscription = this.taskService.getTasks().subscribe((tasks) => {
+      this.tasks = tasks;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
 }
