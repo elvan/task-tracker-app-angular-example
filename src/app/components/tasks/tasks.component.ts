@@ -10,17 +10,45 @@ import { Task } from '../../task';
 })
 export class TasksComponent implements OnDestroy, OnInit {
   tasks: Task[] = [];
-  subscription?: Subscription;
+  listTasksSub?: Subscription;
+  toggleReminderSub?: Subscription;
+  deleteTaskSub?: Subscription;
 
   constructor(private taskService: TaskService) {}
 
   ngOnInit(): void {
-    this.subscription = this.taskService.getTasks().subscribe((tasks) => {
+    this.listTasksSub = this.taskService.getTasks().subscribe((tasks) => {
       this.tasks = tasks;
     });
   }
 
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    this.listTasksSub?.unsubscribe();
+    this.deleteTaskSub?.unsubscribe();
+  }
+
+  toggleReminder(task?: Task): void {
+    if (task) {
+      task.reminder = !task.reminder;
+
+      this.toggleReminderSub = this.taskService
+        .updateTaskReminder(task)
+        .subscribe((task) => {
+          this.tasks = this.tasks.map((t) => {
+            if (t.id === task.id) {
+              t.reminder = task.reminder;
+            }
+            return t;
+          });
+        });
+    }
+  }
+
+  deleteTask(id?: number): void {
+    if (id) {
+      this.deleteTaskSub = this.taskService.deleteTask(id).subscribe(() => {
+        this.tasks = this.tasks.filter((task) => task.id !== id);
+      });
+    }
   }
 }
